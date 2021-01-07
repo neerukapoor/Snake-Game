@@ -1,0 +1,175 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+
+#define maxleni 20
+#define maxlenj 30
+int score=0;
+int facex=maxleni/2;
+int facey=maxlenj/2;
+int bodyx[100],bodyy[100];
+int s;
+
+int i,j;
+int fruitx,fruity;
+void display()
+{
+ int k,w;
+ clrscr();
+ printf("To exit the game press n\n");
+ for(i=0;i<maxleni;i++)
+ {
+  for(j=0;j<maxlenj;j++)
+  {
+   if(i==0 || j==0 || i==maxleni-1 || j==maxlenj-1)
+    printf("#");
+   else if(i==facex && j==facey)
+    printf("S");
+   else if(i==fruitx && j==fruity)
+    printf("F");
+   else
+   {
+    w=1;
+    for(k=0;k<s;k++)
+    {
+     if(i==bodyx[k] && j==bodyy[k])
+     {
+      w=0;
+      printf("s");
+     }
+    }
+    if(w==1)
+     printf(" ");
+   }
+  }
+  printf("\n");
+ }
+}
+
+void fruit()
+{
+ label1:
+ fruitx=rand()%19;
+ if(fruitx==0 || fruitx==maxleni)
+  goto label1;
+ label2:
+ fruity=rand()%29;
+ if(fruity==0 || fruity==maxlenj)
+  goto label2;
+}
+
+void move()
+{
+ char ch,prevch;
+ long int t;
+ int prev1x,prev1y,prev2x,prev2y;
+ int i,w,face1,face2;
+ s=0;
+ ch=getch();
+ label1:
+ do
+ {
+  for(i=0;i<s;i++)
+  {
+    if(facex==bodyx[i] && facey==bodyy[i])
+     return;
+  }
+  if(facex==fruitx && facey==fruity)
+  {
+   face1=facex;
+   face2=facey;
+   fruit();
+   score=score+10;
+   s=s+1;
+   goto label2;
+  }
+  if((facex==maxleni-1) || ((facex && facey)==0) || (facey==maxlenj-1))
+  {
+   printf("Oops GAME OVER :( !!!\n");
+   return;
+  }
+   label2:
+   if(s>0)
+   {
+    prev1x=bodyx[0];
+    prev1y=bodyy[0];
+   }
+   if(s>0)
+   {
+    if(ch=='a')
+    {
+     bodyx[0]=facex;
+     bodyy[0]=facey;
+    }
+    if(ch=='w')
+    {
+     bodyx[0]=facex;
+     bodyy[0]=facey;
+    }
+    if(ch=='d')
+    {
+     bodyx[0]=facex;
+     bodyy[0]=facey;
+    }
+    if(ch=='s')
+    {
+     bodyx[0]=facex;
+     bodyy[0]=facey;
+    }
+   }
+  for(i=1;i<s;i++)
+  {
+    prev2x=bodyx[i];
+    prev2y=bodyy[i];
+    bodyx[i]=prev1x;
+    bodyy[i]=prev1y;
+    prev1x=prev2x;
+    prev1y=prev2y;
+  }
+  switch(ch)
+  {
+    case 'a': facey--;
+	      break;
+    case 'w': facex--;
+	      break;
+    case 's': facex++;
+	      break;
+    case 'd': facey++;
+  }
+  display();
+  for(t=0;t<10000;t++)
+  {
+   for(w=0;w<100;w++)
+   {
+     for(i=0;i<10;i++)
+     {
+     }
+   }
+  }
+ }while(!kbhit());
+ ch=getch();
+ /*if(s>0)
+ {
+  if((prevch=='s' && ch=='w') || (prevch=='w' && ch=='s') || (prevch=='a' && ch=='d') || (prevch=='d' && ch=='a'))
+  ch=prevch;
+  goto label1;
+ }*/
+ if(ch=='a' || ch=='w' || ch=='s' || ch=='d')
+ {
+  //prevch=ch;
+  goto label1;
+ }
+ if(ch=='n')
+  return;
+}
+
+void main()
+{
+ char ch;
+ clrscr();
+ fruit();
+ display();
+ move();
+ printf("your score is=%d",score);
+ getch();
+}
